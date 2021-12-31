@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" rel="stylesheet"  integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+        <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+
+        <title>Map Journal</title>
+    </head>
+    <body>
+
+        <!-- Main Body of Page -->
+        <div class="container">
+
+            <h1>Map Journal</h1>
+            <hr>
+
+            <div class="row">
+                <!-- container NewPinEditBox for a new Pin -->
+                <div id="NewPinEditBox">
+                    <form action='addPin' method='POST'>
+                        <div class="form-group row">
+                            <label for="NewPinEditBox_pin_name" class="col-3 col-form-label">
+                                Name</label>
+                            <div class="col-9">
+                                <input type="text" name="name" id="NewPinEditBox_pin_name" 
+                                       class="form-control"/>
+                                <h5 id="NewPinNameCheck" style="color: red;" >
+                                    **Pin Name is missing
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="NewPinEditBox_pin_date" class="col-3 col-form-label">
+                                Date</label>
+                            <div class="col-9">
+                                <input type="date" name="moment" 
+                                       id="NewPinEditBox_pin_date" class="form-control"/>
+                                <h5 id="NewPinDateCheck" style="color: red;" >
+                                    **Date is missing
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="NewPinEditBox_description" class="col-3 col-form-label">
+                                Short Description</label>
+                            <div class="col-9">
+                                <input type="text" name="description" id="NewPinEditBox_description" 
+                                       class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="NewPinEditBox_pin_comments" class="col-3 col-form-label">
+                                Comments</label>
+                            <div class="col-9">
+                                <textarea id="NewPinEditBox_pin_comments" name="comments"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="NewPinEditBox_latitude" class="col-3 col-form-label">
+                                Latitude</label>
+                            <div class="col-9">
+                                <input type="text" name="latitude" id="NewPinEditBox_latitude" 
+                                       class="form-control" readonly/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="NewPinEditBox_longitude" class="col-3 col-form-label">
+                                Longitude</label>
+                            <div class="col-9">
+                                <input type="text" name="longitude" id="NewPinEditBox_longitude" 
+                                       class="form-control" readonly/>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="newPin_EditBox_Cancel">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="newPin_Submit" disabled>Submit</button>
+                    </form>
+                </div>
+
+                <!-- container ExistingPinEditBox for a new Pin -->
+                <div id="ExistingPinEditBox">
+                    <form action='editPin' method='POST'>
+                        <div class="form-group row">
+                            <label for="ExistingPinEditBox_pin_name" class="col-3 col-form-label">
+                                Name</label>
+                            <div class="col-9">
+                                <input type="text" name="ExistingPinEditBox_pin_name" id="ExistingPinEditBox_pin_name" 
+                                       class="form-control"/>
+                                <h5 id="ExistingPinNameCheck" style="color: red;" >
+                                    **Pin Name is missing
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ExistingPinEditBox_pin_date" class="col-3 col-form-label">
+                                Date</label>
+                            <div class="col-9">
+                                <input type="date" name="ExistingPinEditBox_pin_date" 
+                                       id="ExistingPinEditBox_pin_date" class="form-control"/>
+                                <h5 id="ExistingPinDateCheck" style="color: red;" >
+                                    **Date is missing
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ExistingPinEditBox_description" class="col-3 col-form-label">
+                                Short Description</label>
+                            <div class="col-9">
+                                <input type="text" name="ExistingPinEditBox_description" id="ExistingPinEditBox_description" 
+                                       class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ExistingPinEditBox_pin_comments" class="col-3 col-form-label">
+                                Comments</label>
+                            <div class="col-9">
+                                <textarea id="ExistingPinEditBox_pin_comments" name="ExistingPinEditBox_pin_comments"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ExistingPinEditBox_latitude" class="col-3 col-form-label">
+                                Latitude</label>
+                            <div class="col-9">
+                                <input type="text" name="ExistingPinEditBox_latitude" id="ExistingPinEditBox_latitude" 
+                                       class="form-control" readonly/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="ExistingPinEditBox_longitude" class="col-3 col-form-label">
+                                Longitude</label>
+                            <div class="col-9">
+                                <input type="text" name="ExistingPinEditBox_longitude" id="ExistingPinEditBox_longitude" 
+                                       class="form-control" readonly/>
+                            </div>
+                        </div>
+                        <input type="hidden" name="ExistingPinEditBox_id" id ="ExistingPinEditBox_id" class="form-control"/>
+                        <button type="button" class="btn btn-primary" id="existingPin_EditBox_Cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="existingPin_EditBox_Delete" value="" onclick="confirmDelete(this.value)">Delete</button>
+                        <button type="submit" class="btn btn-primary" id="existingPin_Submit" disabled>Update</button>
+                    </form>
+                </div>
+
+                <!-- container DeletePinConfirmationBox for confirming deleting a Pin -->
+                <div id="DeletePinConfirmationBox">
+                    <form action='deletePin' method='GET'>
+                        <div class="form-group row">
+
+                            <input type="hidden" class="form-control" name="DeletePinConfirmationBox_id" id ="DeletePinConfirmationBox_id"/>
+                            <button type="button" class="btn btn-primary" id="DeletePinConfirmationBox_Cancel">Cancel</button>       
+                            <button type="submit" class="btn btn-primary" id="DeletePinConfirmationBox_Delete">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- container for sidebar -->
+                <div class="w-25 col">
+                    <h2>Pins</h2>
+                    <div class ="btn-group-vertical" role ="group" id="pin_sidebar">
+                        <!-- Sidebar items are dynamically added -->
+                    </div>
+                </div>
+
+                <!-- container for the map -->
+                <div class="w-75 col-6">
+                    <div id="mapid" style="width: 100%; height: 800px;"></div>
+                </div> 
+            </div>
+
+        </div>
+
+        <!-- End main body -->
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+        <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+        <script th:inline="javascript">
+                            var markers = {};
+                            var pins = {};
+                            var NewPinEditBox_validName = false;
+                            var NewPinEditBox_validDate = false;
+                            var ExistingPinEditBox_validName = true;
+                            var ExistingPinEditBox_validDate = true;
+                            var mymap = L.map('mapid').locate({setView: true, maxZoom: 17});
+                            $(document).ready(function () {
+                                $("#NewPinEditBox").hide();
+                                $('newPin_Submit').prop("disabled", true);
+                                $("#ExistingPinEditBox").hide();
+                                $("#DeletePinConfirmationBox").hide();
+                                $("#NewPinEditBox_pin_comments").summernote();
+                                $("#ExistingPinEditBox_pin_comments").summernote();
+                                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                    maxZoom: 18,
+                                    attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+                                }).addTo(mymap);
+                                var retrievedpins = [[${allpins}]];
+                                for (var i = 0; i < retrievedpins.length; i++) {
+                                    var marker = L.marker([retrievedpins[i].location.latitude, retrievedpins[i].location.longitude]);
+                                    marker.addTo(mymap);
+                                    marker.bindPopup(retrievedpins[i].name + '<br>' + retrievedpins[i].description + '<br>' + 'Latitude: ' + retrievedpins[i].location.latitude + '<br>' + 'Longitude: ' + retrievedpins[i].location.longitude);
+                                    markers[marker._leaflet_id] = marker;
+                                    pins[marker._leaflet_id] = retrievedpins[i];
+                                    marker.addEventListener("mouseover", function (e) {
+                                        e.target.openPopup();
+                                    });
+                                    marker.addEventListener("click", function (e) {
+                                        this.dragging.enable();
+                                        this.on('dragend', function (e) {
+                                        $("#ExistingPinEditBox_latitude").val(this.getLatLng().lat);
+                                        $("#ExistingPinEditBox_longitude").val(this.getLatLng().lng);
+                                    });
+                                        
+                                        $("#NewPinEditBox").hide();
+                                        $('#ExistingPinNameCheck').hide();
+                                        $('#ExistingPinDateCheck').hide();
+                                        $('#existingPin_Submit').prop("disabled", false);
+                                        $('.btn').removeClass('active').addClass('inactive');
+                                        $('#sidebar' + e.target._leaflet_id).removeClass('inactive').addClass('active');
+                                        mymap.flyTo(e.target.getLatLng(), 16);
+                                        $("#ExistingPinEditBox_pin_name").val(undefined);
+                                        $("#ExistingPinEditBox_pin_date").val(undefined);
+                                        $("#ExistingPinEditBox_description").val(undefined);
+                                        $("#ExistingPinEditBox_pin_comments").summernote('reset');
+                                        $("#ExistingPinEditBox_latitude").val(undefined);
+                                        $("#ExistingPinEditBox_longitude").val(undefined);
+                                        $("#ExistingPinEditBox_pin_name").val(pins[e.target._leaflet_id].name);
+                                        $("#ExistingPinEditBox_pin_date").val(pins[e.target._leaflet_id].moment);
+                                        $("#ExistingPinEditBox_description").val(pins[e.target._leaflet_id].description);
+                                        $("#ExistingPinEditBox_pin_comments").summernote('code', pins[e.target._leaflet_id].comments);
+                                        $("#ExistingPinEditBox_latitude").val(pins[e.target._leaflet_id].location.latitude);
+                                        $("#ExistingPinEditBox_longitude").val(pins[e.target._leaflet_id].location.longitude);
+                                        $("#ExistingPinEditBox_id").val(pins[e.target._leaflet_id].pin_id);
+                                        $("#existingPin_EditBox_Delete").val(pins[e.target._leaflet_id].pin_id);
+                                        $("#DeletePinConfirmationBox_id").val(pins[e.target._leaflet_id].pin_id);
+                                        $("#ExistingPinEditBox").show();
+                                    });
+
+                                    var button = $('<button>' + retrievedpins[i].name + '</button>')
+                                            .addClass('btn btn-primary')
+                                            .attr('type', 'button')
+                                            .attr('id', 'sidebar' + marker._leaflet_id)
+                                            .attr('onclick', 'goToMarker(' + marker._leaflet_id + ')');
+                                    $("#pin_sidebar").append(button);
+                                }
+
+                                var chosenmarker;
+                                mymap.on('click', function (e) {
+                                    var marker = L.marker([e.latlng.lat, e.latlng.lng], {
+                                        draggable: true,
+                                        autoPan: true
+                                    });
+                                    if (chosenmarker !== undefined) {
+                                        mymap.removeLayer(chosenmarker);
+                                    }
+                                    marker.on('dragend', function (e) {
+                                        $("#NewPinEditBox_latitude").val(marker.getLatLng().lat);
+                                        $("#NewPinEditBox_longitude").val(marker.getLatLng().lng);
+                                    });
+                                    marker.addTo(mymap);
+                                    chosenmarker = marker;
+
+                                    $("#NewPinEditBox").show();
+                                    $("#ExistingPinEditBox").hide();
+                                    $("#NewPinEditBox_pin_name").val(undefined);
+                                    $("#NewPinEditBox_pin_date").val(undefined);
+                                    $("#NewPinEditBox_description").val(undefined);
+                                    $("#NewPinEditBox_pin_comments").summernote('reset');
+                                    $("#NewPinEditBox_latitude").val(undefined);
+                                    $("#NewPinEditBox_longitude").val(undefined);
+                                    $("#NewPinEditBox").show();
+                                    $("#NewPinEditBox_latitude").val(e.latlng.lat);
+                                    $("#NewPinEditBox_longitude").val(e.latlng.lng);
+                                    $("#NewPinEditBox_marker_id").val(marker._leaflet_id);
+                                });
+                                $("#newPin_EditBox_Cancel").click(function () {
+                                    mymap.removeLayer(chosenmarker);
+                                    $("#NewPinEditBox_pin_name").val(undefined);
+                                    $("#NewPinEditBox_pin_date").val(undefined);
+                                    $("#NewPinEditBox_description").val(undefined);
+                                    $("#NewPinEditBox_pin_comments").summernote('reset');
+                                    $("#NewPinEditBox_latitude").val(undefined);
+                                    $("#NewPinEditBox_longitude").val(undefined);
+                                    $('.btn').removeClass('active').addClass('inactive');
+                                    $("#NewPinEditBox").hide();
+                                });
+                                $("#existingPin_EditBox_Cancel").click(function () {
+                                    $("#ExistingPinEditBox_pin_name").val(undefined);
+                                    $("#ExistingPinEditBox_pin_date").val(undefined);
+                                    $("#ExistingPinEditBox_description").val(undefined);
+                                    $("#ExistingPinEditBox_pin_comments").summernote('reset');
+                                    $("#ExistingPinEditBox_latitude").val(undefined);
+                                    $("#ExistingPinEditBox_longitude").val(undefined);
+                                    $('.btn').removeClass('active').addClass('inactive');
+                                    $("#ExistingPinEditBox").hide();
+                                });
+                                $("#DeletePinConfirmationBox_Cancel").click(function () {
+                                    $('.btn').removeClass('active').addClass('inactive');
+                                    $("#DeletePinConfirmationBox").hide();
+                                    $("#ExistingPinEditBox").hide();
+                                    $("#NewPinEditBox").hide();
+                                });
+
+
+                                $('#NewPinEditBox_pin_name').on('input', function () {
+                                    var input = $(this);
+                                    var is_name = input.val();
+                                    if (is_name)
+                                    {
+                                        $('#NewPinNameCheck').hide();
+                                        NewPinEditBox_validName = true;
+                                        checkValidNewPin();
+                                    } else {
+                                        $('#NewPinNameCheck').show();
+                                        NewPinEditBox_validName = false;
+                                        checkValidNewPin();
+                                    }
+                                });
+                                $('#NewPinEditBox_pin_date').on('input', function () {
+                                    var is_date = $("#NewPinEditBox_pin_date").val();
+                                    if (is_date)
+                                    {
+                                        $('#NewPinDateCheck').hide();
+                                        NewPinEditBox_validDate = true;
+                                        checkValidNewPin();
+                                    } else {
+                                        $('#NewPinDateCheck').show();
+                                        NewPinEditBox_validDate = false;
+                                        checkValidNewPin();
+                                    }
+                                });
+
+                                $('#ExistingPinEditBox_pin_name').on('input', function () {
+                                    var input = $(this);
+                                    var is_name = input.val();
+                                    if (is_name)
+                                    {
+                                        $('#ExistingPinNameCheck').hide();
+                                        ExistingPinEditBox_validName = true;
+                                        checkValidExistingPin();
+                                    } else {
+                                        $('#ExistingPinNameCheck').show();
+                                        ExistingPinEditBox_validName = false;
+                                        checkValidExistingPin();
+                                    }
+                                });
+                                $('#ExistingPinEditBox_pin_date').on('input', function () {
+                                    var is_date = $("#ExistingPinEditBox_pin_date").val();
+                                    if (is_date)
+                                    {
+                                        $('#ExistingPinDateCheck').hide();
+                                        ExistingPinEditBox_validDate = true;
+                                        checkValidExistingPin();
+                                    } else {
+                                        $('#ExistingPinDateCheck').show();
+                                        ExistingPinEditBox_validDate = false;
+                                        checkValidExistingPin();
+                                    }
+                                });
+
+                            });
+                            function checkValidNewPin() {
+                                if (NewPinEditBox_validName && NewPinEditBox_validDate) {
+                                    $('#newPin_Submit').prop("disabled", false);
+                                } else {
+                                    $('#newPin_Submit').prop("disabled", true);
+                                }
+                            }
+                            function checkValidExistingPin() {
+                                if (ExistingPinEditBox_validName && ExistingPinEditBox_validDate) {
+                                    $('#existingPin_Submit').prop("disabled", false);
+                                } else {
+                                    $('#existingPin_Submit').prop("disabled", true);
+                                }
+                            }
+                            function goToMarker(markerid) {
+                                mymap.flyTo(markers[markerid].getLatLng(), 16);
+                                markers[markerid].openPopup();
+                            }
+                            function confirmDelete() {
+                                $("#NewPinEditBox").hide();
+                                $("#ExistingPinEditBox").hide();
+                                $("#DeletePinConfirmationBox").show();
+                            }
+        </script>   
+    </body>
+</html>
