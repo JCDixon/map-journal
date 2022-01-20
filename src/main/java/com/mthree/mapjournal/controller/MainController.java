@@ -8,12 +8,14 @@ import com.mthree.mapjournal.dto.Location;
 import com.mthree.mapjournal.dto.Pin;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
  * @author john
  */
 @Controller
+
 public class MainController {
 
     Set<ConstraintViolation<Pin>> pinViolations = new HashSet<>();
@@ -41,10 +44,15 @@ public class MainController {
     @Autowired
     TripRepository tripRepo;
 
-    @GetMapping("/")
-    public String index(Model model) {
+    @GetMapping("/MapJournal")
+    public String MapJournal(Model model) {
         model.addAttribute("allpins", pinRepo.findAll());
-        return "index";
+        return "MapJournal";
+    }
+    
+    @GetMapping("/allPins")
+    public ResponseEntity<List<Pin>> allPins() {
+        return ResponseEntity.ok(pinRepo.findAll());
     }
 
     @PostMapping("addPin")
@@ -66,13 +74,13 @@ public class MainController {
         pinViolations = pinValidator.validate(newPin);
         locViolations = locValidator.validate(pinLocation);
         if (!pinViolations.isEmpty() || !locViolations.isEmpty()) {
-            return "redirect:/";
+            return "redirect:/MapJournal";
         }
 
         pinLocation = locRepo.save(pinLocation);
         newPin.setLocation(pinLocation);
         pinRepo.save(newPin);
-        return "redirect:/";
+        return "redirect:/MapJournal";
     }
 
     @PostMapping("editPin")
@@ -94,17 +102,17 @@ public class MainController {
         locViolations = locValidator.validate(updateLoc);
 
         if (!pinViolations.isEmpty() || !locViolations.isEmpty()) {
-            return "redirect:/";
+            return "redirect:/MapJournal";
         }
         updateLoc = locRepo.save(updateLoc);
         pin.setLocation(updateLoc);
         pinRepo.save(pin);
-        return "redirect:/";
+        return "redirect:/MapJournal";
     }
 
     @GetMapping("deletePin")
     public String deletePin(HttpServletRequest request) {
         pinRepo.deleteById(Integer.parseInt(request.getParameter("DeletePinConfirmationBox_id")));
-        return "redirect:/";
+        return "redirect:/MapJournal";
     }
 }

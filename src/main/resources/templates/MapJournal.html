@@ -17,7 +17,9 @@
         <!-- Main Body of Page -->
         <div class="container">
 
-            <h1>Map Journal</h1>
+            <div class="col text-left m-3">
+                <h1>Map Journal</h1>
+            </div>
             <hr>
 
             <div class="row">
@@ -31,7 +33,7 @@
                                 <input type="text" name="name" id="NewPinEditBox_pin_name" 
                                        class="form-control"/>
                                 <h5 id="NewPinNameCheck" style="color: red;" >
-                                    **Pin Name is missing
+                                    Pin Name is missing
                                 </h5>
                             </div>
                         </div>
@@ -42,7 +44,7 @@
                                 <input type="date" name="moment" 
                                        id="NewPinEditBox_pin_date" class="form-control"/>
                                 <h5 id="NewPinDateCheck" style="color: red;" >
-                                    **Date is missing
+                                    Date is missing
                                 </h5>
                             </div>
                         </div>
@@ -92,7 +94,7 @@
                                 <input type="text" name="ExistingPinEditBox_pin_name" id="ExistingPinEditBox_pin_name" 
                                        class="form-control"/>
                                 <h5 id="ExistingPinNameCheck" style="color: red;" >
-                                    **Pin Name is missing
+                                    Pin Name is missing
                                 </h5>
                             </div>
                         </div>
@@ -103,7 +105,7 @@
                                 <input type="date" name="ExistingPinEditBox_pin_date" 
                                        id="ExistingPinEditBox_pin_date" class="form-control"/>
                                 <h5 id="ExistingPinDateCheck" style="color: red;" >
-                                    **Date is missing
+                                    Date is missing
                                 </h5>
                             </div>
                         </div>
@@ -214,10 +216,10 @@
                                     marker.addEventListener("click", function (e) {
                                         this.dragging.enable();
                                         this.on('dragend', function (e) {
-                                        $("#ExistingPinEditBox_latitude").val(this.getLatLng().lat);
-                                        $("#ExistingPinEditBox_longitude").val(this.getLatLng().lng);
-                                    });
-                                        
+                                            $("#ExistingPinEditBox_latitude").val(this.getLatLng().lat);
+                                            $("#ExistingPinEditBox_longitude").val(this.getLatLng().lng);
+                                        });
+
                                         $("#NewPinEditBox").hide();
                                         $('#ExistingPinNameCheck').hide();
                                         $('#ExistingPinDateCheck').hide();
